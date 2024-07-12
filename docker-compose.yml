@@ -1,0 +1,43 @@
+services:
+  # Zookeeper service
+  zookeeper:
+    image: wurstmeister/zookeeper:latest # You can choose a different Zookeeper image
+    ports:
+      - '2181:2181' # Expose Zookeeper port (internal to Kafka) on host port 2181
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 # Set Zookeeper connection string for Kafka
+
+  # PostgreSQL service
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=password # Change this to your desired password
+      - POSTGRES_USER=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistent storage for Postgres data
+
+  # MongoDB service
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db # Persistent storage for MongoDB data
+
+  # Kafka service (using wurstmeister/kafka)
+  kafka:
+    image: wurstmeister/kafka:latest
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 # Set Zookeeper connection string for Kafka
+    ports:
+      - '9092:9092' # Expose Kafka port on host port 9092
+    volumes:
+      - kafka-data:/var/lib/kafka/data # Persistent storage for Kafka data
+
+# Define volumes for persistent storage (optional)
+volumes:
+  postgres_data:
+  mongodb_data:
+  kafka-data:
