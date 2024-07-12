@@ -3,19 +3,19 @@ import pickle
 import pandas as pd
 
 def prepOneHotEncoder(df, col, pathPackages):
-    oneHotEncoder = pickle.load(open(pathPackages + '\\' + 'prep' + col + '.pkl', 'rb'))
+    oneHotEncoder = pickle.load(open(os.path.join(pathPackages, 'prep' + col + '.pkl'), 'rb'))
     dfOneHotEncoder = pd.DataFrame(oneHotEncoder.transform(df[[col]]).toarray(),
                                    columns=[col + "_" + str(i+1) for i in range(len(oneHotEncoder.categories_[0]))])
     df = pd.concat([df.drop(col, axis=1), dfOneHotEncoder], axis=1)
     return df
 
 def prepStandardScaler(df, col, pathPackages):
-    scaler = pickle.load(open(pathPackages + '\\' + 'prep' + col + '.pkl', 'rb'))
+    scaler = pickle.load(open(os.path.join(pathPackages, 'prep' + col + '.pkl'), 'rb'))
     df[col] = scaler.transform(df[[col]])
     return df
 
 def runModel(data, path):
-    pathPackages = os.path.join(path, "packages") + ""
+    pathPackages = os.path.join(path, "packages")
     col = pickle.load(open(os.path.join(pathPackages, 'columnModelling.pkl'), 'rb'))
     df = pd.DataFrame(data, index=[0])
     df = df[col]
